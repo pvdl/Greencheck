@@ -5,7 +5,7 @@ require "rubygems"
 require "json"
 require "net/http"
 
-# Exit program if nu url is given
+# Exit program if no url is given
 if ARGV.length == 0
     puts "No argument"
     exit(0)
@@ -21,7 +21,7 @@ hash = JSON.parse(data)
 if hash["green"] == true
     puts "[+] " + ARGV[0] + " was checked and found green"
     if hash["hostedby"] != 0
-        puts "[+] This website is hosted by " + hash["hostedby"]
+        puts "[+] This website is hosted by " + hash["hostedby"] + " - " + hash["hostedbywebsite"]
     end
 else
     puts "[-] " + ARGV[0] + " was checked and found not green"
