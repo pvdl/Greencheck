@@ -33,23 +33,24 @@ request["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko
 
 # Get the json file from thegreenwebfoundation.org
 response = http.request(request)
+
+# Exit program when incorrect response code is received
+if !response.code.to_i == 200
+    puts "[!] The response code received from thegreenwebfoundation.org is not OK."
+    exit(0)
+end
+
+# All checks are OK. Continue
 data     = response.body
 hashval  = JSON.parse(data)
 
-
 # Output the result
-
-# Response from thegreenwebfoundation.org is OK
-if response.code.to_i == 200
-    if hashval["green"] == true
-        puts "[+] " + url + " was checked and found green"
-        if hashval["hostedby"] != 0
-            puts "[+] This website is hosted by " + hashval["hostedby"] + " - " + hashval["hostedbywebsite"]
-        end
-    else
-        puts "[-] " + url + " was checked and found not green"
+if hashval["green"] == true
+    puts "[+] " + url + " was checked and found green"
+    if hashval["hostedby"] != 0
+        puts "[+] This website is hosted by " + hashval["hostedby"] + " - " + hashval["hostedbywebsite"]
     end
 else
-    puts "[!] Response code received from thegreenwebfoundation.org is not OK."
+    puts "[-] " + url + " was checked and found not green"
 end
 
