@@ -34,13 +34,13 @@ request["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko
 # Get the json file from thegreenwebfoundation.org
 response = http.request(request)
 data     = response.body
-hash     = JSON.parse(data)
+hashval  = JSON.parse(data)
 
 # Output the result
-if hash["green"] == true
+if hashval["green"] == true
     puts "[+] " + url + " was checked and found green"
-    if hash["hostedby"] != 0
-        puts "[+] This website is hosted by " + hash["hostedby"] + " - " + hash["hostedbywebsite"]
+    if hashval["hostedby"] != 0
+        puts "[+] This website is hosted by " + hashval["hostedby"] + " - " + hashval["hostedbywebsite"]
     end
 else
     puts "[-] " + url + " was checked and found not green"
