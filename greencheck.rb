@@ -21,14 +21,20 @@ if url =~ !URI::regexp
     exit(0)
 end
 
-# Extract the domain from the URL
-domain = URI.parse(url).host
+# Define the json request file for thegreenwebfoundation.org
+domain   = URI.parse(url).host
+json     = "http://api.thegreenwebfoundation.org/greencheck/" + domain
+uri      = URI.parse(json)
+http     = Net::HTTP.new(uri.host, uri.port)
+request  = Net::HTTP::Get.new(uri.request_uri)
+
+# Set a User-Agent string
+request["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/29.0"
 
 # Get the json file from thegreenwebfoundation.org
-json = "http://api.thegreenwebfoundation.org/greencheck/" + domain
-resp = Net::HTTP.get_response(URI.parse(json))
-data = resp.body  
-hash = JSON.parse(data)
+response = http.request(request)
+data     = response.body
+hash     = JSON.parse(data)
 
 # Output the result
 if hash["green"] == true
