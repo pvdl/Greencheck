@@ -10,14 +10,14 @@ require "uri"
 url = ARGV[0]
 
 # Exit program if no URL is given
-if url == 0
-    puts "No argument"
+if url == nil
+    puts "[!] No argument supplied"
     exit(0)
 end
 
 # Exit program when incorrect URL is given
-if url =~ !URI::regexp
-    puts "Incorrect URL"
+if !(url =~ URI::regexp(%w(http https)))  
+    puts "[!] Incorrect URL"
     exit(0)
 end
 
@@ -36,13 +36,20 @@ response = http.request(request)
 data     = response.body
 hashval  = JSON.parse(data)
 
+
 # Output the result
-if hashval["green"] == true
-    puts "[+] " + url + " was checked and found green"
-    if hashval["hostedby"] != 0
-        puts "[+] This website is hosted by " + hashval["hostedby"] + " - " + hashval["hostedbywebsite"]
+
+# Response from thegreenwebfoundation.org is OK
+if response.code.to_i == 200
+    if hashval["green"] == true
+        puts "[+] " + url + " was checked and found green"
+        if hashval["hostedby"] != 0
+            puts "[+] This website is hosted by " + hashval["hostedby"] + " - " + hashval["hostedbywebsite"]
+        end
+    else
+        puts "[-] " + url + " was checked and found not green"
     end
 else
-    puts "[-] " + url + " was checked and found not green"
+    puts "[!] Response code received from thegreenwebfoundation.org is not OK."
 end
 
